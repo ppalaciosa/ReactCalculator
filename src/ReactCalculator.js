@@ -21,7 +21,9 @@ class ReactCalculator extends Component {
     super(props);
 
     this.state = {
-      inputValue: 0
+      previousInputValue: 0,
+      inputValue: 0,
+      selectedSymbol: null
     }
   }
 
@@ -51,6 +53,7 @@ class ReactCalculator extends Component {
 
         inputRow.push(
           <InputButton value={input}
+                       highlight={this.state.selectedSymbol === input}
                        onPress={this._onInputButtonPressed.bind(this, input)}
                        key={r + "-" + i} />
         );
@@ -64,11 +67,48 @@ class ReactCalculator extends Component {
     return views;
   } 
 
-  // Catches the number of the button
+  // Catches the value of the button
   _onInputButtonPressed(input) {
     switch (typeof input) {
       case 'number':
         return this._handleNumberInput(input)
+      case 'string':
+        return this._handleStringInput(input)
+    }
+  }
+
+  // Changes states that are not numbers
+  _handleStringInput(str) {
+    switch (str) {
+      case '/':
+      case '*':
+      case '+':
+      case '-':
+        // For these cases, set screen to 0
+        this.setState({
+          selectedSymbol: str,
+          previousInputValue: this.state.inputValue,
+          inputValue: 0
+        });
+        break;
+      case '=':
+        const symbol = this.state.selectedSymbol,
+        inputValue = this.state.inputValue,
+        previousInputValue = this.state.previousInputValue;
+
+        // In case there is no symbol, do nothing
+        if (!symbol) {
+          return;
+        }
+
+        this.setState({
+          previousInputValue: 0,
+          // Performing the calculation
+          inputValue: eval(previousInputValue + symbol + inputValue),
+          selectedSymbol: null
+        });
+        break;
+
     }
   }
 

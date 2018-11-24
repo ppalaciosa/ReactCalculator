@@ -28,14 +28,16 @@ class ReactCalculator extends Component {
     )
   }
 
+  // Generating grid of buttons
+
   _renderInputButtons() {
     const views = [];
 
-    for (const r = 0; r < inputButtons.length; r ++) {
+    for (let r = 0; r < inputButtons.length; r ++) {
       const row = inputButtons[r];
 
       const inputRow = [];
-      for (const i = 0; i < row.length; i ++) {
+      for (let i = 0; i < row.length; i ++) {
         const input = row[i];
 
         inputRow.push(
@@ -43,7 +45,9 @@ class ReactCalculator extends Component {
         );
       }
 
-      views.push(<View style={Style.inputRow} key={"row-" + r}>{inputRow}</View>)
+      views.push(<View style={Style.inputRow} key={"row-" + r}>
+                   {inputRow}
+                 </View>)
     }
 
     return views;
